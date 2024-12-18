@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <style>
+        body {
+            margin: 0;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 1px solid #000;
+        }
+
+        #score {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #000;
+            border-radius: 10px;
+        }
+
+        #startScreen button, #gameOverScreen button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #gameOverScreen {
+            display: none;
+        }
+    </style>
+</head>
+<body class="backd">
+    <a href="../../startbootstrap-grayscale-gh-pages/index.html">Back to the Nice Page</a>
+    <a href="myhobby.html" id="Top"> My Hobby</a>
+    <a href="#">My App</a>
+    <a href="tableua.html">Tableau</a><br><br> 
+    <div id="score">Score: 0</div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="startScreen">
+        <h1>Snake Game</h1>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+    <div id="gameOverScreen">
+        <h1>Game Over!</h1>
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <button onclick="startGame()">Play Again</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreDisplay = document.getElementById("score");
+        const startScreen = document.getElementById("startScreen");
+        const gameOverScreen = document.getElementById("gameOverScreen");
+        const finalScore = document.getElementById("finalScore");
+
+        const boxSize = 20;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        let snake;
+        let direction;
+        let food;
+        let score;
+        let gameInterval;
+
+        function initGame() {
+            snake = [{ x: boxSize * 5, y: boxSize * 5 }];
+            direction = "right";
+            food = {
+                x: Math.floor(Math.random() * (canvasWidth / boxSize)) * boxSize,
+                y: Math.floor(Math.random() * (canvasHeight / boxSize)) * boxSize,
+            };
+            score = 0;
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        function drawSnake() {
+            ctx.fillStyle = "#0000FF"; // Bright blue color
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, boxSize, boxSize);
+            });
+        }
+
+        function drawFood() {
+            ctx.fillStyle = "#00FF00"; // Green watermelon color
+            ctx.beginPath();
+            ctx.arc(food.x + boxSize / 2, food.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateSnakePosition() {
+            const head = { ...snake[0] };
+
+            switch (direction) {
+                case "right":
+                    head.x += boxSize;
+                    break;
+                case "left":
+                    head.x -= boxSize;
+                    break;
+                case "up":
+                    head.y -= boxSize;
+                    break;
+                case "down":
+                    head.y += boxSize;
+                    break;
+            }
+
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreDisplay.textContent = `Score: ${score}`;
+                food = {
+                    x: Math.floor(Math.random() * (canvasWidth / boxSize)) * boxSize,
+                    y: Math.floor(Math.random() * (canvasHeight / boxSize)) * boxSize,
+                };
+            } else {
+                snake.pop(); // Remove the tail
+            }
+
+            snake.unshift(head); // Add new head
+
+            // Check for collisions
+            if (
+                head.x < 0 ||
+                head.y < 0 ||
+                head.x >= canvasWidth ||
+                head.y >= canvasHeight ||
+                snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)
+            ) {
+                endGame();
+            }
+        }
+
+        function changeDirection(event) {
+            const key = event.key;
+            const goingUp = direction === "up";
+            const goingDown = direction === "down";
+            const goingRight = direction === "right";
+            const goingLeft = direction === "left";
+
+            if (key === "ArrowUp" && !goingDown) direction = "up";
+            if (key === "ArrowDown" && !goingUp) direction = "down";
+            if (key === "ArrowLeft" && !goingRight) direction = "left";
+            if (key === "ArrowRight" && !goingLeft) direction = "right";
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            drawFood();
+            drawSnake();
+            updateSnakePosition();
+        }
+
+        function startGame() {
+            initGame();
+            startScreen.style.display = "none";
+            gameOverScreen.style.display = "none";
+            gameInterval = setInterval(gameLoop, 100);
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            finalScore.textContent = score;
+            gameOverScreen.style.display = "block";
+        }
+
+        document.addEventListener("keydown", changeDirection);
+    </script> 
+    
+    
+    
+</body>
+</html>

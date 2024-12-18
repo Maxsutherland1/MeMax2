@@ -1,0 +1,30 @@
+    body{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 20px;
+        Color: rgb(0, 12, 68);
+        background-color: rgb(255, 255, 255); }
+
+    li{font-size: 15px;
+        font-style: italic;
+        color: rgb(59, 59, 42);
+        font-weight: normal;
+        text-decoration: none;}
+    .headings{
+        font-weight: bold;
+        font-style: normal;}
+
+    a:hover{text-decoration: underline}
+
+    a:visited{color: rgb(119, 84, 202);}
+
+    a{ color: teal;
+    font-style:inherit;
+    text-decoration: none;}
+
+    .boldandnormal{font-weight: bolder;
+    font-style: normal;} /* font for my hobby page list*/
+
+    .hobbyback{background-image: url(../images/Canvas.jpg);}
+
+    .fancy{ font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style: italic;}
